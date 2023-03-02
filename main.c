@@ -1,6 +1,7 @@
 #include "gba.h"
 #include "mode4.h"
 #include "print.h"
+#include "sound.h"
 
 unsigned short oldButtons;
 unsigned short buttons;
@@ -170,7 +171,6 @@ void goToPause() {
 
 // runs pause state
 void pause() {
-    waitForVBlank();
     if (BUTTON_PRESSED(BUTTON_START)) {
         goToGame();
     }
@@ -180,6 +180,8 @@ void pause() {
     if (BUTTON_PRESSED(BUTTON_A)) {
         goToScoreboard();
     }
+    waitForVBlank();
+
 }
 
 // set up lose
