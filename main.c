@@ -18,7 +18,8 @@ enum
     GAME,
     PAUSE,
     WIN,
-    LOSE
+    LOSE,
+    SCOREBOARD
 };
 int state;
 
@@ -47,6 +48,8 @@ void goToLose();
 void lose();
 void goToWin();
 void win();
+void goToScoreboard();
+void scoreboard();
 
 
 int main() {
@@ -72,6 +75,9 @@ int main() {
                 break;
             case WIN:
                 win();
+                break;
+            case SCOREBOARD:
+                scoreboard();
                 break;
         }
         t++; // increment time
@@ -127,9 +133,8 @@ void start() {
 // set up game
 void goToGame() {
 
-    // fillScreen(BROWN);
-    // drawRect(52, 0, 138, SCREENHEIGHT, BRULEE);
-    // drawString(2, 31, "score: ", FOREST);
+    fillScreen(COLOR(3, 3, 3));
+    drawString(2, 2, "lives: ", RED);
     state = GAME;
 }
 
@@ -155,10 +160,10 @@ void game() {
 
 // sets up pause state
 void goToPause() {
-    fillScreen(FOREST);
-    drawString(90, 38, "game paused!", BRULEE);
-    drawString(60, 58, "press start to continue", PEENK);
-    drawString(70, 68, "press select to quit", LAVPINK);
+    fillScreen(GRAY);
+    drawString(90, 38, "game paused!", YELLOW);
+    drawString(60, 58, "press start to continue", BLUE);
+    drawString(70, 68, "press select to quit", GREEN);
     waitForVBlank();
     state = PAUSE;
 }
@@ -172,16 +177,19 @@ void pause() {
     if (BUTTON_PRESSED(BUTTON_SELECT)) {
         goToStart();
     }
+    if (BUTTON_PRESSED(BUTTON_A)) {
+        goToScoreboard();
+    }
 }
 
 // set up lose
 void goToLose() {
-    fillScreen(FOREST);
-    drawString(85, 48, "you lost!", PEENK);
-    drawString(85, 68, "score: ", PEENK);
-    drawString(125, 68, hscore, PEENK);
+    fillScreen(GRAY);
+    drawString(85, 48, "you lost!", YELLOW);
+    drawString(85, 68, "score: ", RED);
+    drawString(125, 68, hscore, RED);
 
-    drawString(45, 88, "press start to try again", BRULEE);
+    drawString(45, 88, "press start to try again", BLUE);
     waitForVBlank();
     state = LOSE;
 }
@@ -199,11 +207,12 @@ void goToWin() {
     waitForVBlank();
     fillScreen(FOREST);
 
-    drawString(85, 48, "you win!", PEENK);
+    drawString(85, 48, "you win!", YELLOW);
 
-    drawString(164, 78, hscore, BRULEE);
+    drawString(85, 68, "score: ", RED);
+    drawString(125, 68, hscore, RED);
 
-    drawString(43, 108, "press start to play again", BRULEE);
+    drawString(43, 108, "press start to play again", BLUE);
     state = WIN;
 }
 
@@ -211,5 +220,21 @@ void goToWin() {
 void win() {
     if (BUTTON_PRESSED(BUTTON_START)) {
         goToStart();
+    }
+
+    if (BUTTON_PRESSED(BUTTON_A)) {
+        goToScoreboard();
+    }
+}
+
+// runs scoreboard state
+void scoreboard() {
+    waitForVBlank();
+    if (BUTTON_PRESSED(BUTTON_START)) {
+        goToStart();
+    }
+
+    if (BUTTON_PRESSED(BUTTON_A)) {
+        goToPause();
     }
 }

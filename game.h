@@ -1,13 +1,12 @@
 // constants
 
-#define bufferWidth 7
-#define borderWidth 52
-#define floorWidth  137
 #define numEnemies 10
+#define numLives 3
 
 // variables
 extern PLAYER player;
 extern ENEMY enemies[numEnemies];
+extern int lives[numLives];
 extern int score;
 
 // function prototypes
@@ -24,6 +23,7 @@ void updateBG();
 void drawGame();
 void drawPlayer();
 void drawEnemy();
+void drawPowerup();
 
 // structs
     // enemy
