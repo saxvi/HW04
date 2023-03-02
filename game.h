@@ -9,6 +9,12 @@ extern ENEMY enemies[numEnemies];
 extern int lives[numLives];
 extern int score;
 
+// custom game colors
+#define NUMCOLORS 8
+// this does an enum trick to make them the last indeces of the palette
+enum {BLACKID=(256-NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID};
+extern unsigned short colors[NUMCOLORS];
+
 // function prototypes
 void initGame();
 void initPlayer();
