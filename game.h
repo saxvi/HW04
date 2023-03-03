@@ -63,5 +63,5 @@ extern int t;
 // custom game colors
 #define NUMCOLORS 7
 // this does an enum trick to make them the last indeces of the palette
-enum {BLACKID=(256-NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
+enum {BLACKID=(256 - NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
 extern unsigned short colors[NUMCOLORS];

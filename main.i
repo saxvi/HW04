@@ -60,7 +60,7 @@ extern int t;
 
 
 
-enum {BLACKID=(256-7), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
+enum {BLACKID=(256 - 7), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
 extern unsigned short colors[7];
 # 2 "main.c" 2
 # 1 "gba.h" 1
@@ -1570,8 +1570,6 @@ void initialize() {
 
 void goToStart() {
 
-    DMANow(3, asteroidPal, ((unsigned short *)0x5000000), 256);
-
     drawFullscreenImage4(backgroundBitmap);
     drawString4(90, 38, "space guys", (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10));
 
@@ -1605,7 +1603,6 @@ void goToGame() {
 
 void game() {
 
-    DMANow(3, asteroidPal, ((unsigned short *)0x5000000), 256);
     updateGame();
     drawGame();
 
@@ -1679,7 +1676,7 @@ void lose() {
     }
     waitForVBlank();
 }
-# 259 "main.c"
+# 256 "main.c"
 void goToScoreboard() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
     drawImage4(83, 90, 28, 24, spaceshipBitmap);

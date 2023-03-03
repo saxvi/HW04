@@ -120,8 +120,6 @@ void initialize() {
 
 void goToStart() {
 
-    DMANow(3, asteroidPal, PALETTE, 256);
-
     drawFullscreenImage4(backgroundBitmap);
     drawString4(90, 38, "space guys", ORANGE);
 

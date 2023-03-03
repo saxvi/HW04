@@ -27,33 +27,26 @@ goToStart:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	mov	r2, #83886080
-	ldr	r1, .L4
-	mov	r3, #256
-	mov	r0, #3
-	ldr	r4, .L4+4
-	mov	lr, pc
-	bx	r4
-	ldr	r0, .L4+8
-	ldr	r3, .L4+12
+	ldr	r0, .L4
+	ldr	r3, .L4+4
 	mov	lr, pc
 	bx	r3
-	ldr	r4, .L4+16
+	ldr	r4, .L4+8
 	mov	r1, #38
-	ldr	r2, .L4+20
+	ldr	r2, .L4+12
 	mov	r0, #90
 	mov	r3, #63
 	mov	lr, pc
 	bx	r4
-	ldr	r3, .L4+24
+	ldr	r3, .L4+16
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L4+28
+	ldr	r3, .L4+20
 	mov	lr, pc
 	bx	r3
 	mov	r3, #0
-	ldr	r1, .L4+32
-	ldr	r2, .L4+36
+	ldr	r1, .L4+24
+	ldr	r2, .L4+28
 	str	r3, [r1]
 	str	r3, [r2]
 	pop	{r4, lr}
@@ -61,8 +54,6 @@ goToStart:
 .L5:
 	.align	2
 .L4:
-	.word	asteroidPal
-	.word	DMANow
 	.word	backgroundBitmap
 	.word	drawFullscreenImage4
 	.word	drawString4
@@ -272,68 +263,61 @@ game:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, lr}
-	mov	r2, #83886080
-	mov	r0, #3
-	ldr	r1, .L33
-	mov	r3, #256
-	ldr	r4, .L33+4
-	mov	lr, pc
-	bx	r4
-	ldr	r3, .L33+8
+	ldr	r3, .L33
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L33+12
+	ldr	r3, .L33+4
 	mov	lr, pc
 	bx	r3
 	mov	r1, #2
-	ldr	r4, .L33+16
+	ldr	r4, .L33+8
 	mov	r0, r1
 	mov	r3, #250
-	ldr	r2, .L33+20
+	ldr	r2, .L33+12
 	mov	lr, pc
 	bx	r4
 	mov	r3, #250
 	mov	r1, #10
 	mov	r0, #2
-	ldr	r2, .L33+24
+	ldr	r2, .L33+16
 	mov	lr, pc
 	bx	r4
-	ldr	r3, .L33+28
-	ldr	r1, .L33+32
+	ldr	r3, .L33+20
+	ldr	r1, .L33+24
 	ldr	r2, [r3]
-	ldr	r5, .L33+36
-	ldr	r0, .L33+40
+	ldr	r5, .L33+28
+	ldr	r0, .L33+32
 	mov	lr, pc
 	bx	r5
-	ldr	r3, .L33+44
-	ldr	r1, .L33+32
+	ldr	r3, .L33+36
+	ldr	r1, .L33+24
 	ldr	r2, [r3]
-	ldr	r0, .L33+48
+	ldr	r0, .L33+40
 	mov	lr, pc
 	bx	r5
 	mov	r3, #250
 	mov	r1, #2
 	mov	r0, #42
-	ldr	r2, .L33+40
+	ldr	r2, .L33+32
 	mov	lr, pc
 	bx	r4
 	mov	r1, #10
 	mov	r0, #42
-	ldr	r2, .L33+48
+	ldr	r2, .L33+40
 	mov	r3, #250
 	mov	lr, pc
 	bx	r4
+	ldr	r3, .L33+44
+	mov	lr, pc
+	bx	r3
+	ldr	r3, .L33+48
+	mov	lr, pc
+	bx	r3
 	ldr	r3, .L33+52
-	mov	lr, pc
-	bx	r3
-	ldr	r3, .L33+56
-	mov	lr, pc
-	bx	r3
-	ldr	r3, .L33+60
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L26
-	ldr	r3, .L33+64
+	ldr	r3, .L33+56
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L32
@@ -346,8 +330,6 @@ game:
 .L34:
 	.align	2
 .L33:
-	.word	asteroidPal
-	.word	DMANow
 	.word	updateGame
 	.word	drawGame
 	.word	drawString4

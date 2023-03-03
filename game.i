@@ -60,8 +60,8 @@ extern int t;
 
 
 
-enum {BLACKID=(256-8), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
-extern unsigned short colors[8];
+enum {BLACKID=(256 - 7), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
+extern unsigned short colors[7];
 # 2 "game.c" 2
 # 1 "gba.h" 1
 
@@ -1467,13 +1467,13 @@ void initGame() {
     initCoin();
 
 
-    unsigned short colors[8] = {(((0) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10), (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10), (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10)};
+    unsigned short colors[7] = {(((0) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10), (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10), (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10)};
 
     DMANow(3, asteroidPal, ((unsigned short *)0x5000000), 256);
 
 
-    for (int i = 0; i < 8; i++) {
-        ((unsigned short *)0x5000000)[256 - 8 + i] = colors[i];
+    for (int i = 0; i < 7; i++) {
+        ((unsigned short *)0x5000000)[256 - 7 + i] = colors[i];
     }
 }
 
@@ -1494,7 +1494,7 @@ void initEnemies() {
         enemies[i].x = (240 / ((rand() % 11) + 1));
         enemies[i].y = (160 / ((rand() % 11) + 1));
         enemies[i].xvel = (i * (rand() % 5) + 1);
-        enemies[i].xvel = (i * (rand() % 5) + 1);
+        enemies[i].yvel = (i * (rand() % 5) + 1);
         enemies[i].height = 28;
         enemies[i].width = 24;
         if (i % 3 == 0) {
@@ -1532,28 +1532,28 @@ void updatePlayer() {
 
 
     if ((~(buttons) & ((1<<5))) && (player.x - 1 > 0)) {
-        player.xvel = -2;
+        player.xvel = -4;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.xvel = -6;
+            player.xvel = -10;
         }
     } else if ((~(buttons) & ((1<<4))) && player.x + player.width < 240) {
-        player.xvel = 2;
+        player.xvel = 4;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.xvel = 6;
+            player.xvel = 10;
         }
     } else {
         player.xvel = 0;
     }
 
     if ((~(buttons) & ((1<<6))) && (player.y - 1 > 0)) {
-        player.yvel = -2;
+        player.yvel = -4;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.yvel = -6;
+            player.yvel = -10;
         }
     } else if ((~(buttons) & ((1<<7))) && (player.y + player.height < 160)) {
-        player.yvel = 2;
+        player.yvel = 4;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.yvel = 6;
+            player.yvel = 10;
         }
     } else {
         player.yvel = 0;
@@ -1566,45 +1566,49 @@ void updatePlayer() {
 }
 
 void updateEnemy(ENEMY* e) {
+    if (e->active) {
+        if (e->x <= 1) {
+            e->xvel = 2;
+        }
+        if (e->y <= 1) {
+            e->yvel = 2;
+        }
+        if ((e->x + e->width) >= 239) {
+            e->xvel = -2;
+        }
+        if ((e->y + e->height) >= 159) {
+            e->yvel = -2;
+        }
 
-    if (e->x <= 1) {
-        e->xvel = 2;
-    }
-    if (e->y <= 1) {
-        e->yvel = 2;
-    }
-    if ((e->x + e->width) >= 239) {
-        e->xvel = -2;
-    }
-    if ((e->y + e->height) >= 159) {
-        e->yvel = -2;
-    }
+        if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
+            lives--;
+            e->active = 0;
+        }
 
-    if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
-        lives--;
-        e->active = 0;
+        e->oldx = e->x;
+        e->oldy = e->y;
+        e->x += e->xvel;
+        e->y += e->yvel;
     }
-
-    e->oldx = e->x;
-    e->oldy = e->y;
-    e->x += e->xvel;
-    e->y += e->yvel;
 }
 
 void updateCoins(ENEMY* c) {
 
 
-    if (t % 450 == 0) {
+    if (t % 140 == 0) {
         c->active = 1;
     }
 
+    if (c->active) {
 
-    if (collision(player.x, player.y, player.width, player.height, c->x, c->y, c->width, c->height)) {
-        c->active = 0;
-        score++;
-        *(volatile u16*)0x04000068 = (((5) & 15) << 12) |
-                            (((3) & 7) << 8);
-        *(volatile u16*)0x0400006C = NOTE_G5 | (1<<15);
+
+        if (collision(player.x, player.y, player.width, player.height, c->x, c->y, c->width, c->height)) {
+            c->active = 0;
+            score++;
+            *(volatile u16*)0x04000068 = (((5) & 15) << 12) |
+                                (((3) & 7) << 8);
+            *(volatile u16*)0x0400006C = NOTE_G5 | (1<<15);
+        }
     }
 }
 
@@ -1634,15 +1638,11 @@ void drawPlayer() {
 void drawEnemy(ENEMY* e) {
     if (e->active) {
         drawImage4(e->x, e->y, e->width, e->height, asteroidBitmap);
-    } else {
-        drawRect4(e->x, e->y, e->width, e->height, BLACKID);
     }
 }
 
 void drawCoins(ENEMY* c) {
     if (c->active) {
         drawImage4(c->x, c->y, c->width, c->height, USETHISCOINBitmap);
-    } else {
-        drawRect4(c->x, c->y, c->width, c->height, BLACKID);
     }
 }
