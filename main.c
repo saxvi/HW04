@@ -11,6 +11,8 @@ int skipFrames = 2;
 
 int score;
 int highscore;
+extern int lives = 3;
+
 
 // states
 enum
@@ -47,8 +49,6 @@ void goToPause();
 void pause();
 void goToLose();
 void lose();
-void goToWin();
-void win();
 void goToScoreboard();
 void scoreboard();
 
@@ -73,9 +73,6 @@ int main() {
                 break;
             case LOSE:
                 lose();
-                break;
-            case WIN:
-                win();
                 break;
             case SCOREBOARD:
                 scoreboard();
@@ -204,30 +201,30 @@ void lose() {
     }
 }
 
-// set up win
-void goToWin() {
-    waitForVBlank();
-    fillScreen(FOREST);
+// // set up win
+// void goToWin() {
+//     waitForVBlank();
+//     fillScreen(FOREST);
 
-    drawString(85, 48, "you win!", YELLOW);
+//     drawString(85, 48, "you win!", YELLOW);
 
-    drawString(85, 68, "score: ", RED);
-    drawString(125, 68, hscore, RED);
+//     drawString(85, 68, "score: ", RED);
+//     drawString(125, 68, hscore, RED);
 
-    drawString(43, 108, "press start to play again", BLUE);
-    state = WIN;
-}
+//     drawString(43, 108, "press start to play again", BLUE);
+//     state = WIN;
+// }
 
-// runs win state
-void win() {
-    if (BUTTON_PRESSED(BUTTON_START)) {
-        goToStart();
-    }
+// // runs win state
+// void win() {
+//     if (BUTTON_PRESSED(BUTTON_START)) {
+//         goToStart();
+//     }
 
-    if (BUTTON_PRESSED(BUTTON_A)) {
-        goToScoreboard();
-    }
-}
+//     if (BUTTON_PRESSED(BUTTON_A)) {
+//         goToScoreboard();
+//     }
+// }
 
 // runs scoreboard state
 void scoreboard() {

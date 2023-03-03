@@ -22,6 +22,7 @@ int t;
 //score
 extern int score;
 extern char temp;
+extern int lives;
 
 // initialize game
 void initGame() {
@@ -99,19 +100,25 @@ void updatePlayer() {
     if (BUTTON_HELD(BUTTON_LEFT) && (player.x - 1 < 0)) {
         player.xvel = -2;
         if (BUTTON_PRESSED(BUTTON_LSHOULDER)) {
-            player.xvel = -4;
+            player.xvel = -6;
         }
     } else if (BUTTON_HELD(BUTTON_RIGHT) && player.x + player.width > SCREENWIDTH) {
         player.xvel = 2;
         if (BUTTON_PRESSED(BUTTON_RSHOULDER)) {
-            player.xvel = 4;
+            player.xvel = 6;
         }
     }
 
     if (BUTTON_HELD(BUTTON_UP) && (player.y - 1 < 0)) {
         player.yvel = -2;
+        if (BUTTON_PRESSED(BUTTON_LSHOULDER)) {
+            player.yvel = -6;
+        }
     } else if (BUTTON_HELD(BUTTON_DOWN) && (player.y + player.height > SCREENHEIGHT)) {
         player.yvel = 2;
+        if (BUTTON_PRESSED(BUTTON_RSHOULDER)) {
+            player.yvel = 6;
+        }
     }
 
     player.oldx = player.x;
@@ -122,13 +129,31 @@ void updatePlayer() {
 
 void updateEnemy(ENEMY* e) {
 
-    
-
-
     e->oldx = e->x;
     e->oldy = e->y;
     e->x += e->xvel;
     e->y += e->yvel;
+
+    if (e->x < SCREENWIDTH) { // left side bounce
+        e->x = (SCREENWIDTH - e->width) + e->x;
+        e->xvel = -e->xvel;
+    }
+    if (e->y < 0) { // top bounce
+        e->y = e->height + e->y;
+        e->yvel = -e->yvel;
+    }
+    if ((e->x + e->width) > SCREENWIDTH) {
+        e->x -= e->x + e->width - (SCREENWIDTH);
+        e->xvel = -e->xvel;
+    }
+    if ((e->y + e->height) > SCREENHEIGHT) {
+        e->y -= e->y + e->height - (SCREENHEIGHT);
+        e->yvel = -e->yvel;
+    }
+
+    if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
+        lives--;
+    }
 }
 
 
