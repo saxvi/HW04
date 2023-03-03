@@ -1,7 +1,14 @@
+#include "game.h"
 #include "gba.h"
 #include "mode4.h"
 #include "print.h"
 #include "sound.h"
+#include "spaceship.h"
+#include "asteroid.h"
+#include "background.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 
 unsigned short oldButtons;
 unsigned short buttons;
@@ -26,11 +33,13 @@ enum
 };
 int state;
 
-// random
+// random prototype
 void srand();
+
+// random seed
 int rSeed;
 
-// text buffer
+// text buffers
 char temp2[1];
 
 char buffer[41];
@@ -55,6 +64,8 @@ void scoreboard();
 
 int main() {
     REG_DISPCTL = MODE(4) | BG_ENABLE(2) | DISP_BACKBUFFER;
+
+    initialize();
 
     while (1) {
         oldButtons = buttons;
@@ -109,9 +120,16 @@ void initialize() {
 
 void goToStart() {
 
-    // write start lol
+    DMANow(3, asteroidPal, PALETTE, 256);
+
+    drawFullscreenImage4(backgroundBitmap);
+    drawString4(90, 38, "space guys", ORANGE);
+
+    waitForVBlank();
+    flipPage();
 
     state = START;
+
     rSeed = 0;
 }
 
@@ -119,10 +137,10 @@ void goToStart() {
 void start() {
 
     rSeed++;
-
     waitForVBlank();
+
     if (BUTTON_PRESSED(BUTTON_START)) {
-        srand(time(NULL));
+        srand(rSeed);
         goToGame();
         initGame();
     }
@@ -131,8 +149,6 @@ void start() {
 // set up game
 void goToGame() {
 
-    fillScreen(COLOR(3, 3, 3));
-    drawString(2, 2, "lives: ", RED);
     state = GAME;
 }
 
@@ -140,29 +156,39 @@ void goToGame() {
 void game() {
     
     updateGame();
-
-    sprintf(buffer, "%d", score);
-    sprintf(hscore, "%d", temp);
-
-
     drawGame();
+
+    drawString4(2, 2, "lives: ", REDID);
+    drawString4(2, 10, "score: ", REDID);
+    sprintf(buffer, "%d", lives);
+    sprintf(hscore, "%d", score);
+    drawString4(42, 2, buffer, REDID);
+    drawString4(42, 10, hscore, REDID);
+
+    waitForVBlank();
+    flipPage();
+
 
     if (BUTTON_PRESSED(BUTTON_START)) {
         goToPause();
     }
 
-    if (score == -1) {
-        goToLose();
-    }
+    // if (lives == 0) {
+    //     goToLose();
+    // }
 }
 
 // sets up pause state
 void goToPause() {
-    fillScreen(GRAY);
-    drawString(90, 38, "game paused!", YELLOW);
-    drawString(60, 58, "press start to continue", BLUE);
-    drawString(70, 68, "press select to quit", GREEN);
+
+    fillScreen4(GRAY);
+    drawString4(90, 38, "game paused!", YELLOW);
+    drawString4(60, 58, "press start to continue", BLUE);
+    drawString4(70, 68, "press select to quit", GREEN);
+
     waitForVBlank();
+    flipPage();
+
     state = PAUSE;
 }
 
@@ -177,41 +203,43 @@ void pause() {
     if (BUTTON_PRESSED(BUTTON_A)) {
         goToScoreboard();
     }
-    waitForVBlank();
-
 }
 
 // set up lose
 void goToLose() {
-    fillScreen(GRAY);
-    drawString(85, 48, "you lost!", YELLOW);
-    drawString(85, 68, "score: ", RED);
-    drawString(125, 68, hscore, RED);
+    fillScreen4(GRAY);
+    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawString4(85, 48, "you lost!", YELLOW);
+    drawString4(85, 68, "score: ", RED);
+    drawString4(125, 68, hscore, RED);
 
-    drawString(45, 88, "press start to try again", BLUE);
+    drawString4(45, 88, "press start to try again", BLUE);
+
     waitForVBlank();
+    flipPage();
+
     state = LOSE;
 }
 
 // runs lose state
 void lose() {
-    waitForVBlank();
     if (BUTTON_PRESSED(BUTTON_START)) {
         goToStart();
     }
+    waitForVBlank();
 }
 
 // // set up win
 // void goToWin() {
 //     waitForVBlank();
-//     fillScreen(FOREST);
+//     fillScreen4(FOREST);
 
-//     drawString(85, 48, "you win!", YELLOW);
+//     drawString4(85, 48, "you win!", YELLOW);
 
-//     drawString(85, 68, "score: ", RED);
-//     drawString(125, 68, hscore, RED);
+//     drawString4(85, 68, "score: ", RED);
+//     drawString4(125, 68, hscore, RED);
 
-//     drawString(43, 108, "press start to play again", BLUE);
+//     drawString4(43, 108, "press start to play again", BLUE);
 //     state = WIN;
 // }
 
@@ -226,9 +254,24 @@ void lose() {
 //     }
 // }
 
+// go to da scoreboard
+void goToScoreboard() {
+    fillScreen4(GRAY);
+    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawString4(85, 48, "this is where", YELLOW);
+    drawString4(85, 68, "i will put score ", RED);
+    drawString4(125, 68, hscore, RED);
+
+    drawString4(45, 88, "press start to try again", BLUE);
+
+    waitForVBlank();
+    flipPage();
+
+    state = SCOREBOARD;
+}
+
 // runs scoreboard state
 void scoreboard() {
-    waitForVBlank();
     if (BUTTON_PRESSED(BUTTON_START)) {
         goToStart();
     }
