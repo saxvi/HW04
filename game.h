@@ -43,8 +43,8 @@ void updateBG();
 
 void drawGame();
 void drawPlayer();
-void drawEnemy();
-void drawCoins();
+void drawEnemy(ENEMY* e);
+void drawCoins(ENEMY* c);
 
 
 // constants
@@ -58,9 +58,10 @@ extern PLAYER player;
 extern ENEMY enemies[numEnemies];
 extern int lives;
 extern int score;
+extern int t;
 
 // custom game colors
-#define NUMCOLORS 8
+#define NUMCOLORS 7
 // this does an enum trick to make them the last indeces of the palette
 enum {BLACKID=(256-NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
 extern unsigned short colors[NUMCOLORS];

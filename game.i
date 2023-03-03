@@ -48,13 +48,14 @@ void updateBG();
 
 void drawGame();
 void drawPlayer();
-void drawEnemy();
-void drawCoins();
+void drawEnemy(ENEMY* e);
+void drawCoins(ENEMY* c);
 # 57 "game.h"
 extern PLAYER player;
 extern ENEMY enemies[10];
 extern int lives;
 extern int score;
+extern int t;
 
 
 
@@ -206,6 +207,17 @@ extern const unsigned short asteroidBitmap[336];
 
 extern const unsigned short asteroidPal[256];
 # 7 "game.c" 2
+# 1 "background.h" 1
+# 21 "background.h"
+extern const unsigned short backgroundBitmap[19200];
+
+
+extern const unsigned short backgroundPal[256];
+# 8 "game.c" 2
+# 1 "USETHISCOIN.h" 1
+# 20 "USETHISCOIN.h"
+extern const unsigned short USETHISCOINBitmap[288];
+# 9 "game.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 1 3
 # 10 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/machine/ieeefp.h" 1 3
@@ -1014,7 +1026,7 @@ extern long double _strtold_r (struct _reent *, const char *restrict, char **res
 extern long double strtold (const char *restrict, char **restrict);
 # 336 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
 
-# 8 "game.c" 2
+# 10 "game.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 1 3
 # 36 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 3
 # 1 "/opt/devkitpro/devkitARM/lib/gcc/arm-none-eabi/9.1.0/include/stddef.h" 1 3 4
@@ -1425,19 +1437,18 @@ _putchar_unlocked(int _c)
 }
 # 797 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 3
 
-# 9 "game.c" 2
+# 11 "game.c" 2
 
 
 
-# 11 "game.c"
+# 13 "game.c"
 PLAYER player;
 ENEMY enemy;
 ENEMY coin;
-
-
 ENEMY enemies[10];
 ENEMY coins[10];
-int spawned;
+
+
 int t;
 
 
@@ -1458,12 +1469,11 @@ void initGame() {
 
     unsigned short colors[8] = {(((0) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10), (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10), (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10)};
 
-
     DMANow(3, asteroidPal, ((unsigned short *)0x5000000), 256);
 
 
     for (int i = 0; i < 8; i++) {
-        ((unsigned short *)0x5000000)[256-8 +i] = colors[i];
+        ((unsigned short *)0x5000000)[256 - 8 + i] = colors[i];
     }
 }
 
@@ -1477,7 +1487,6 @@ void initPlayer() {
     player.yvel = 0;
     player.height = 12;
     player.width = 32;
-    player.powerup = 0;
 }
 
 void initEnemies() {
@@ -1488,7 +1497,9 @@ void initEnemies() {
         enemies[i].xvel = (i * (rand() % 5) + 1);
         enemies[i].height = 28;
         enemies[i].width = 24;
-        enemies[i].active = 1;
+        if (i % 3 == 0) {
+            enemies[i].active = 1;
+        }
     }
 }
 
@@ -1498,8 +1509,8 @@ void initCoin() {
         coins[i].y = (160 / ((rand() % 15) + 1));
         coins[i].xvel = 0;
         coins[i].yvel = 0;
-        coins[i].height = 5;
-        coins[i].width = 5;
+        coins[i].height = 24;
+        coins[i].width = 24;
         coins[i].active = 0;
     }
 }
@@ -1508,6 +1519,7 @@ void updateGame() {
 
 
     updatePlayer();
+
     for (int i = 0; i < 10; i++) {
         updateEnemy(&enemies[i]);
     }
@@ -1519,61 +1531,118 @@ void updateGame() {
 void updatePlayer() {
 
 
-    if ((~(buttons) & ((1<<5))) && (player.x - 1 < 0)) {
+    if ((~(buttons) & ((1<<5))) && (player.x - 1 > 0)) {
         player.xvel = -2;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
             player.xvel = -6;
         }
-    } else if ((~(buttons) & ((1<<4))) && player.x + player.width > 240) {
+    } else if ((~(buttons) & ((1<<4))) && player.x + player.width < 240) {
         player.xvel = 2;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
             player.xvel = 6;
         }
+    } else {
+        player.xvel = 0;
     }
 
-    if ((~(buttons) & ((1<<6))) && (player.y - 1 < 0)) {
+    if ((~(buttons) & ((1<<6))) && (player.y - 1 > 0)) {
         player.yvel = -2;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
             player.yvel = -6;
         }
-    } else if ((~(buttons) & ((1<<7))) && (player.y + player.height > 160)) {
+    } else if ((~(buttons) & ((1<<7))) && (player.y + player.height < 160)) {
         player.yvel = 2;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
             player.yvel = 6;
         }
+    } else {
+        player.yvel = 0;
     }
 
     player.oldx = player.x;
-    player.x += player.xvel;
     player.oldy = player.y;
+    player.x += player.xvel;
     player.y += player.yvel;
 }
 
 void updateEnemy(ENEMY* e) {
 
-    e->oldx = e->x;
-    e->oldy = e->y;
-    e->x += e->xvel;
-    e->y += e->yvel;
-
-    if (e->x < 240) {
-        e->x = (240 - e->width) + e->x;
-        e->xvel = -e->xvel;
+    if (e->x <= 1) {
+        e->xvel = 2;
     }
-    if (e->y < 0) {
-        e->y = e->height + e->y;
-        e->yvel = -e->yvel;
+    if (e->y <= 1) {
+        e->yvel = 2;
     }
-    if ((e->x + e->width) > 240) {
-        e->x -= e->x + e->width - (240);
-        e->xvel = -e->xvel;
+    if ((e->x + e->width) >= 239) {
+        e->xvel = -2;
     }
-    if ((e->y + e->height) > 160) {
-        e->y -= e->y + e->height - (160);
-        e->yvel = -e->yvel;
+    if ((e->y + e->height) >= 159) {
+        e->yvel = -2;
     }
 
     if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
         lives--;
+        e->active = 0;
+    }
+
+    e->oldx = e->x;
+    e->oldy = e->y;
+    e->x += e->xvel;
+    e->y += e->yvel;
+}
+
+void updateCoins(ENEMY* c) {
+
+
+    if (t % 450 == 0) {
+        c->active = 1;
+    }
+
+
+    if (collision(player.x, player.y, player.width, player.height, c->x, c->y, c->width, c->height)) {
+        c->active = 0;
+        score++;
+        *(volatile u16*)0x04000068 = (((5) & 15) << 12) |
+                            (((3) & 7) << 8);
+        *(volatile u16*)0x0400006C = NOTE_G5 | (1<<15);
+    }
+}
+
+
+
+void drawGame() {
+
+
+    drawFullscreenImage4(backgroundBitmap);
+    drawPlayer();
+
+    for (int i = 0; i < 10; i++) {
+        drawEnemy(&enemies[i]);
+    }
+    for (int i = 0; i < 10; i++) {
+        drawCoins(&coins[i]);
+    }
+
+    flipPage();
+    waitForVBlank();
+}
+
+void drawPlayer() {
+    drawImage4(player.x, player.y, player.width, player.height, spaceshipBitmap);
+}
+
+void drawEnemy(ENEMY* e) {
+    if (e->active) {
+        drawImage4(e->x, e->y, e->width, e->height, asteroidBitmap);
+    } else {
+        drawRect4(e->x, e->y, e->width, e->height, BLACKID);
+    }
+}
+
+void drawCoins(ENEMY* c) {
+    if (c->active) {
+        drawImage4(c->x, c->y, c->width, c->height, USETHISCOINBitmap);
+    } else {
+        drawRect4(c->x, c->y, c->width, c->height, BLACKID);
     }
 }
