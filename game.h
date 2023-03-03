@@ -1,6 +1,7 @@
 // constants
 
 #define numEnemies 10
+#define numCoins 10
 #define numLives 3
 
 // variables
@@ -12,7 +13,7 @@ extern int score;
 // custom game colors
 #define NUMCOLORS 8
 // this does an enum trick to make them the last indeces of the palette
-enum {BLACKID=(256-NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID};
+enum {BLACKID=(256-NUMCOLORS), REDID, BLUEID, YELLOWID, GREENID, GRAYID, ORANGEID};
 extern unsigned short colors[NUMCOLORS];
 
 // function prototypes
@@ -24,12 +25,13 @@ void initPowerup();
 void updateGame();
 void updatePlayer();
 void updateEnemy(ENEMY* e);
+void updateCoins(ENEMY* c);
 void updateBG();
 
 void drawGame();
 void drawPlayer();
 void drawEnemy();
-void drawPowerup();
+void drawCoins();
 
 // structs
     // enemy

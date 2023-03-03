@@ -10,10 +10,11 @@
 // structs on da screen
 PLAYER player;
 ENEMY enemy;
-ENEMY powerup;
+ENEMY coin;
 
 // utility 
 ENEMY enemies[numEnemies];
+ENEMY coins[numCoins];
 int spawned;
 int t;
 
@@ -29,10 +30,10 @@ void initGame() {
 
     initPlayer();
     initEnemies();
-    //initPowerup();
+    initCoin();
 
     // initializing the colors
-    unsigned short colors[NUMCOLORS] = {BLACK, RED, BLUE, YELLOW, GREEN, GRAY};
+    unsigned short colors[NUMCOLORS] = {BLACK, RED, BLUE, YELLOW, GREEN, GRAY, ORANGE};
 
     // TODO 4.2: load the umbreon image's colors
     DMANow(3, asteroidPal, PALETTE, 256);
@@ -68,12 +69,27 @@ void initEnemies() {
     }
 }
 
+void initCoin() {
+    for (int i = 0; i < numCoins; i++) {
+        coins[i].x = (SCREENWIDTH / ((rand() % 20) + 1));
+        coins[i].y = (SCREENHEIGHT / ((rand() % 15) + 1));
+        coins[i].xvel = 0;
+        coins[i].yvel = 0;
+        coins[i].height = 5;
+        coins[i].width = 5;
+        coins[i].active = 0;
+    }
+}
+
 void updateGame() {
 
     // update structs
     updatePlayer();
     for (int i = 0; i < numEnemies; i++) {
         updateEnemy(&enemies[i]);
+    }
+    for (int i = 0; i < numCoins; i++) {
+        updateCoins(&coins[i]);
     }
 }
 
@@ -82,15 +98,37 @@ void updatePlayer() {
     // movement and boundaries
     if (BUTTON_HELD(BUTTON_LEFT) && (player.x - 1 < 0)) {
         player.xvel = -2;
+        if (BUTTON_PRESSED(BUTTON_LSHOULDER)) {
+            player.xvel = -4;
+        }
     } else if (BUTTON_HELD(BUTTON_RIGHT) && player.x + player.width > SCREENWIDTH) {
         player.xvel = 2;
+        if (BUTTON_PRESSED(BUTTON_RSHOULDER)) {
+            player.xvel = 4;
+        }
     }
+
     if (BUTTON_HELD(BUTTON_UP) && (player.y - 1 < 0)) {
         player.yvel = -2;
     } else if (BUTTON_HELD(BUTTON_DOWN) && (player.y + player.height > SCREENHEIGHT)) {
         player.yvel = 2;
     }
 
+    player.oldx = player.x;
+    player.x += player.xvel;
+    player.oldy = player.y;
+    player.y += player.yvel;
+}
+
+void updateEnemy(ENEMY* e) {
+
+    
+
+
+    e->oldx = e->x;
+    e->oldy = e->y;
+    e->x += e->xvel;
+    e->y += e->yvel;
 }
 
 
