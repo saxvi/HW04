@@ -13,4 +13,4 @@ while in game, you can access the pause menu by **pressing start**, and from the
 ---
 
 disclaimer
-*i absolutely for the life of me cannot figure out why the colors are not working. i combined the palettes according to the document and have written everything as closely to the labs as possible i am so confused i will be coming to office hours later but this is already late and im out of town so i cant right now im so sorry*
+*i absolutely for the life of me cannot figure out why the colors and screen size are not right. i combined the palettes according to the document and have written everything as closely to the labs as possible (i am so confused) (i will be coming to office hours later but this is already late and im out of town so i cant right now im so sorry)*
