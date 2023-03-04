@@ -20,7 +20,7 @@ updateEnemy.part.0:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	push	{r4, r5, lr}
+	push	{r4, r5, r6, lr}
 	mov	r4, r0
 	ldr	r0, [r0]
 	cmp	r0, #1
@@ -41,39 +41,40 @@ updateEnemy.part.0:
 	mvngt	ip, #1
 	strgt	ip, [r4, #20]
 	ldr	ip, .L12
-	add	r5, ip, #24
-	ldm	r5, {r5, lr}
-	sub	sp, sp, #20
-	str	lr, [sp, #12]
-	ldm	ip, {ip, lr}
-	str	r5, [sp, #8]
-	stm	sp, {ip, lr}
-	ldr	r5, .L12+4
-	mov	lr, pc
-	bx	r5
-	cmp	r0, #0
-	beq	.L6
-	mov	r1, #0
-	ldr	r2, .L12+8
-	ldr	r3, [r2]
-	sub	r3, r3, #1
-	str	r3, [r2]
-	str	r1, [r4, #36]
+	ldr	r5, [ip, #36]
+	cmp	r5, #0
+	sub	sp, sp, #16
+	beq	.L11
 .L6:
-	ldr	r0, [r4]
-	ldr	r1, [r4, #4]
-	ldr	r2, [r4, #16]
-	ldr	r3, [r4, #20]
+	add	r2, r4, #16
+	ldm	r2, {r2, r3}
 	add	r2, r2, r0
 	add	r3, r3, r1
+	stm	r4, {r2, r3}
 	str	r0, [r4, #8]
-	str	r2, [r4]
 	str	r1, [r4, #12]
-	str	r3, [r4, #4]
-	add	sp, sp, #20
+	add	sp, sp, #16
 	@ sp needed
-	pop	{r4, r5, lr}
+	pop	{r4, r5, r6, lr}
 	bx	lr
+.L11:
+	add	r6, ip, #24
+	ldm	r6, {r6, lr}
+	str	lr, [sp, #12]
+	ldm	ip, {ip, lr}
+	str	r6, [sp, #8]
+	stm	sp, {ip, lr}
+	ldr	r6, .L12+4
+	mov	lr, pc
+	bx	r6
+	cmp	r0, #0
+	ldrne	r2, .L12+8
+	ldrne	r3, [r2]
+	subne	r3, r3, #1
+	strne	r5, [r4, #36]
+	strne	r3, [r2]
+	ldm	r4, {r0, r1}
+	b	.L6
 .L13:
 	.align	2
 .L12:
@@ -92,10 +93,10 @@ initPlayer:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	str	lr, [sp, #-4]!
+	mov	r2, #0
 	mov	r0, #120
 	mov	lr, #12
 	mov	r1, #80
-	mov	r2, #0
 	mov	ip, #32
 	ldr	r3, .L16
 	str	lr, [r3, #28]
@@ -106,6 +107,7 @@ initPlayer:
 	str	r1, [r3, #12]
 	str	r2, [r3, #16]
 	str	r2, [r3, #20]
+	str	r2, [r3, #36]
 	ldr	lr, [sp], #4
 	bx	lr
 .L17:
@@ -279,6 +281,7 @@ initGame:
 	str	lr, [r3, #28]
 	str	r2, [r3, #16]
 	str	r2, [r3, #20]
+	str	r2, [r3, #36]
 	str	ip, [r3, #24]
 	str	r1, [r3, #4]
 	str	r1, [r3, #12]
@@ -312,105 +315,104 @@ updatePlayer:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	ldr	r3, .L55
+	ldr	r3, .L57
 	ldrh	r2, [r3]
-	ldr	r3, .L55+4
+	ldr	r3, .L57+4
 	tst	r2, #32
 	str	lr, [sp, #-4]!
-	ldr	r1, [r3]
+	ldr	r0, [r3]
 	bne	.L35
-	cmp	r1, #1
+	cmp	r0, #1
 	ble	.L35
-	mvn	r0, #7
-	ldr	ip, .L55+8
+	mvn	r1, #7
+	ldr	ip, .L57+8
 	ldrh	ip, [ip]
 	tst	ip, #512
-	str	r0, [r3, #16]
+	str	r1, [r3, #16]
 	beq	.L37
 	tst	r2, #512
-	mvneq	r0, #15
-	streq	r0, [r3, #16]
+	mvneq	r1, #29
+	streq	r1, [r3, #16]
+.L37:
+	mov	r1, #0
 	tst	r2, #64
-	ldr	r0, [r3, #4]
-	beq	.L52
-.L40:
+	str	r1, [r3, #36]
+	ldr	ip, [r3, #4]
+	beq	.L54
+.L41:
 	tst	r2, #128
-	beq	.L53
+	beq	.L55
 .L44:
-	mov	r2, #0
-	mov	ip, r0
-	str	r2, [r3, #20]
-.L42:
-	ldr	r2, [r3, #16]
-	add	r2, r2, r1
-	stm	r3, {r2, ip}
-	str	r1, [r3, #8]
-	str	r0, [r3, #12]
+	mov	r1, #0
+	mov	r2, ip
+	str	r1, [r3, #20]
+.L43:
+	ldr	r1, [r3, #16]
+	add	r1, r1, r0
+	stm	r3, {r1, r2}
+	str	r0, [r3, #8]
+	str	ip, [r3, #12]
 	ldr	lr, [sp], #4
 	bx	lr
 .L35:
 	tst	r2, #16
-	beq	.L54
-.L39:
-	mov	r0, #0
-	str	r0, [r3, #16]
-.L37:
+	beq	.L56
+.L40:
+	mov	r1, #0
 	tst	r2, #64
-	ldr	r0, [r3, #4]
-	bne	.L40
-.L52:
-	cmp	r0, #1
-	ble	.L40
-	mvn	ip, #7
-	ldr	lr, .L55+8
+	str	r1, [r3, #16]
+	ldr	ip, [r3, #4]
+	bne	.L41
+.L54:
+	cmp	ip, #1
+	ble	.L41
+	mvn	r1, #7
+	ldr	lr, .L57+8
 	ldrh	lr, [lr]
 	tst	lr, #512
-	str	ip, [r3, #20]
-	beq	.L51
+	str	r1, [r3, #20]
+	beq	.L45
 	tst	r2, #512
-	mvneq	r2, #15
-	subne	ip, r0, #8
-	streq	r2, [r3, #20]
-	addeq	ip, r0, r2
-	b	.L42
-.L53:
-	ldr	ip, [r3, #28]
-	add	ip, r0, ip
-	cmp	ip, #159
+	mvneq	r1, #29
+	streq	r1, [r3, #20]
+.L45:
+	mov	lr, #0
+	add	r2, ip, r1
+	str	lr, [r3, #36]
+	b	.L43
+.L55:
+	ldr	r1, [r3, #28]
+	add	r1, ip, r1
+	cmp	r1, #159
 	bgt	.L44
-	mov	ip, #8
-	ldr	lr, .L55+8
+	mov	r1, #8
+	ldr	lr, .L57+8
 	ldrh	lr, [lr]
 	tst	lr, #256
-	str	ip, [r3, #20]
-	beq	.L51
+	str	r1, [r3, #20]
+	beq	.L45
 	tst	r2, #256
-	moveq	r2, #16
-	addne	ip, r0, #8
-	streq	r2, [r3, #20]
-	addeq	ip, r0, r2
-	b	.L42
-.L54:
-	ldr	r0, [r3, #24]
-	add	r0, r1, r0
-	cmp	r0, #239
-	bgt	.L39
-	mov	r0, #8
-	ldr	ip, .L55+8
+	moveq	r1, #30
+	streq	r1, [r3, #20]
+	b	.L45
+.L56:
+	ldr	r1, [r3, #24]
+	add	r1, r0, r1
+	cmp	r1, #239
+	bgt	.L40
+	mov	r1, #8
+	ldr	ip, .L57+8
 	ldrh	ip, [ip]
 	tst	ip, #256
-	str	r0, [r3, #16]
+	str	r1, [r3, #16]
 	beq	.L37
 	tst	r2, #256
-	moveq	r0, #16
-	streq	r0, [r3, #16]
+	moveq	r1, #30
+	streq	r1, [r3, #16]
 	b	.L37
-.L51:
-	add	ip, r0, ip
-	b	.L42
-.L56:
+.L58:
 	.align	2
-.L55:
+.L57:
 	.word	buttons
 	.word	player
 	.word	oldButtons
@@ -426,23 +428,23 @@ updateEnemy:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L61
-	ldr	r2, .L61+4
-	ldr	r1, .L61+8
+	ldr	r3, .L63
+	ldr	r2, .L63+4
+	ldr	r1, .L63+8
 	ldr	r3, [r3]
 	mla	r3, r1, r3, r2
 	cmp	r2, r3, ror #1
 	movcs	r3, #1
 	strcs	r3, [r0, #36]
-	bcs	.L59
+	bcs	.L61
 	ldr	r3, [r0, #36]
 	cmp	r3, #0
 	bxeq	lr
-.L59:
-	b	updateEnemy.part.0
-.L62:
-	.align	2
 .L61:
+	b	updateEnemy.part.0
+.L64:
+	.align	2
+.L63:
 	.word	t
 	.word	10177646
 	.word	1852331867
@@ -457,11 +459,11 @@ updateCoins:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	ldr	r3, .L74
-	ldr	r2, .L74+4
+	ldr	r3, .L76
+	ldr	r2, .L76+4
 	ldr	r3, [r3]
 	mul	r3, r2, r3
-	ldr	r2, .L74+8
+	ldr	r2, .L76+8
 	add	r3, r3, #61341696
 	add	r3, r3, #14976
 	cmp	r2, r3, ror #2
@@ -470,9 +472,9 @@ updateCoins:
 	mov	r4, r0
 	strcs	r3, [r0, #36]
 	sub	sp, sp, #20
-	bcc	.L73
-.L65:
-	ldr	r0, .L74+12
+	bcc	.L75
+.L67:
+	ldr	r0, .L76+12
 	ldr	r5, [r4, #28]
 	ldr	ip, [r4, #24]
 	add	r2, r0, #24
@@ -482,39 +484,39 @@ updateCoins:
 	str	r5, [sp, #12]
 	str	ip, [sp, #8]
 	ldr	ip, [r4]
-	ldr	r5, .L74+16
+	ldr	r5, .L76+16
 	stm	sp, {ip, lr}
 	mov	lr, pc
 	bx	r5
 	cmp	r0, #0
-	beq	.L63
+	beq	.L65
 	mov	r2, #67108864
 	mov	ip, #0
 	mov	r0, #21248
-	ldr	r1, .L74+20
+	ldr	r1, .L76+20
 	ldr	r3, [r1]
 	add	r3, r3, #1
 	str	r3, [r1]
-	ldr	r3, .L74+24
+	ldr	r3, .L76+24
 	str	ip, [r4, #36]
 	strh	r0, [r2, #104]	@ movhi
 	strh	r3, [r2, #108]	@ movhi
-.L63:
-	add	sp, sp, #20
-	@ sp needed
-	pop	{r4, r5, lr}
-	bx	lr
-.L73:
-	ldr	r3, [r0, #36]
-	cmp	r3, #0
-	bne	.L65
+.L65:
 	add	sp, sp, #20
 	@ sp needed
 	pop	{r4, r5, lr}
 	bx	lr
 .L75:
+	ldr	r3, [r0, #36]
+	cmp	r3, #0
+	bne	.L67
+	add	sp, sp, #20
+	@ sp needed
+	pop	{r4, r5, lr}
+	bx	lr
+.L77:
 	.align	2
-.L74:
+.L76:
 	.word	t
 	.word	-1963413621
 	.word	30678336
@@ -534,47 +536,47 @@ updateGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, r9, r10, lr}
-	ldr	r4, .L90
+	ldr	r4, .L92
 	bl	updatePlayer
 	mov	r9, #1
-	ldr	r8, .L90+4
-	ldr	r7, .L90+8
-	ldr	r5, .L90+12
+	ldr	r8, .L92+4
+	ldr	r7, .L92+8
+	ldr	r5, .L92+12
 	add	r6, r4, #400
-	b	.L80
-.L89:
+	b	.L82
+.L91:
 	ldr	r3, [r4, #36]
 	cmp	r3, #0
-	bne	.L78
+	bne	.L80
 	add	r4, r4, #40
 	cmp	r6, r4
-	beq	.L88
-.L80:
+	beq	.L90
+.L82:
 	ldr	r3, [r8]
 	mla	r3, r7, r3, r5
 	cmp	r5, r3, ror #1
 	strcs	r9, [r4, #36]
-	bcc	.L89
-.L78:
+	bcc	.L91
+.L80:
 	mov	r0, r4
 	add	r4, r4, #40
 	bl	updateEnemy.part.0
 	cmp	r6, r4
-	bne	.L80
-.L88:
-	ldr	r4, .L90+16
+	bne	.L82
+.L90:
+	ldr	r4, .L92+16
 	add	r5, r4, #400
-.L81:
+.L83:
 	mov	r0, r4
 	add	r4, r4, #40
 	bl	updateCoins
 	cmp	r4, r5
-	bne	.L81
+	bne	.L83
 	pop	{r4, r5, r6, r7, r8, r9, r10, lr}
 	bx	lr
-.L91:
+.L93:
 	.align	2
-.L90:
+.L92:
 	.word	enemies
 	.word	t
 	.word	1852331867
@@ -596,16 +598,16 @@ drawPlayer:
 	sub	sp, sp, #8
 	mov	r2, #83886080
 	mov	r0, #3
-	ldr	r1, .L94
-	ldr	r4, .L94+4
+	ldr	r1, .L96
+	ldr	r4, .L96+4
 	mov	lr, pc
 	bx	r4
-	ldr	r0, .L94+8
-	ldr	ip, .L94+12
+	ldr	r0, .L96+8
+	ldr	ip, .L96+12
 	add	r2, r0, #24
 	ldm	r2, {r2, r3}
 	ldm	r0, {r0, r1}
-	ldr	r4, .L94+16
+	ldr	r4, .L96+16
 	str	ip, [sp]
 	mov	lr, pc
 	bx	r4
@@ -613,9 +615,9 @@ drawPlayer:
 	@ sp needed
 	pop	{r4, lr}
 	bx	lr
-.L95:
+.L97:
 	.align	2
-.L94:
+.L96:
 	.word	ASTEROIDUSETHISONEPal
 	.word	DMANow
 	.word	player
@@ -633,44 +635,21 @@ drawGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, lr}
-	ldr	r4, .L112
-	ldr	r0, .L112+4
-	ldr	r3, .L112+8
+	ldr	r4, .L114
+	ldr	r0, .L114+4
+	ldr	r3, .L114+8
 	sub	sp, sp, #12
 	mov	lr, pc
 	bx	r3
-	ldr	r7, .L112+12
+	ldr	r7, .L114+12
 	bl	drawPlayer
-	ldr	r6, .L112+16
-	add	r5, r4, #400
-	b	.L98
-.L97:
-	add	r4, r4, #40
-	cmp	r4, r5
-	beq	.L110
-.L98:
-	ldr	r3, [r4, #36]
-	cmp	r3, #0
-	beq	.L97
-	str	r7, [sp]
-	add	r2, r4, #24
-	ldm	r4, {r0, r1}
-	ldm	r2, {r2, r3}
-	add	r4, r4, #40
-	mov	lr, pc
-	bx	r6
-	cmp	r4, r5
-	bne	.L98
-.L110:
-	ldr	r4, .L112+20
-	ldr	r7, .L112+24
-	ldr	r6, .L112+16
+	ldr	r6, .L114+16
 	add	r5, r4, #400
 	b	.L100
 .L99:
 	add	r4, r4, #40
 	cmp	r4, r5
-	beq	.L111
+	beq	.L112
 .L100:
 	ldr	r3, [r4, #36]
 	cmp	r3, #0
@@ -684,20 +663,43 @@ drawGame:
 	bx	r6
 	cmp	r4, r5
 	bne	.L100
-.L111:
-	ldr	r3, .L112+28
+.L112:
+	ldr	r4, .L114+20
+	ldr	r7, .L114+24
+	ldr	r6, .L114+16
+	add	r5, r4, #400
+	b	.L102
+.L101:
+	add	r4, r4, #40
+	cmp	r4, r5
+	beq	.L113
+.L102:
+	ldr	r3, [r4, #36]
+	cmp	r3, #0
+	beq	.L101
+	str	r7, [sp]
+	add	r2, r4, #24
+	ldm	r4, {r0, r1}
+	ldm	r2, {r2, r3}
+	add	r4, r4, #40
+	mov	lr, pc
+	bx	r6
+	cmp	r4, r5
+	bne	.L102
+.L113:
+	ldr	r3, .L114+28
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L112+32
+	ldr	r3, .L114+32
 	mov	lr, pc
 	bx	r3
 	add	sp, sp, #12
 	@ sp needed
 	pop	{r4, r5, r6, r7, lr}
 	bx	lr
-.L113:
+.L115:
 	.align	2
-.L112:
+.L114:
 	.word	enemies
 	.word	BACKGROUDN__________Bitmap
 	.word	drawFullscreenImage4
@@ -722,11 +724,11 @@ drawEnemy:
 	cmp	r3, #0
 	bxeq	lr
 	push	{r4, lr}
-	ldr	r2, .L123
+	ldr	r2, .L125
 	sub	sp, sp, #8
 	ldr	r3, [r0, #28]
 	str	r2, [sp]
-	ldr	r4, .L123+4
+	ldr	r4, .L125+4
 	ldr	r2, [r0, #24]
 	ldm	r0, {r0, r1}
 	mov	lr, pc
@@ -735,9 +737,9 @@ drawEnemy:
 	@ sp needed
 	pop	{r4, lr}
 	bx	lr
-.L124:
+.L126:
 	.align	2
-.L123:
+.L125:
 	.word	ASTEROIDUSETHISONEBitmap
 	.word	drawImage4
 	.size	drawEnemy, .-drawEnemy
@@ -755,11 +757,11 @@ drawCoins:
 	cmp	r3, #0
 	bxeq	lr
 	push	{r4, lr}
-	ldr	r2, .L134
+	ldr	r2, .L136
 	sub	sp, sp, #8
 	ldr	r3, [r0, #28]
 	str	r2, [sp]
-	ldr	r4, .L134+4
+	ldr	r4, .L136+4
 	ldr	r2, [r0, #24]
 	ldm	r0, {r0, r1}
 	mov	lr, pc
@@ -768,9 +770,9 @@ drawCoins:
 	@ sp needed
 	pop	{r4, lr}
 	bx	lr
-.L135:
+.L137:
 	.align	2
-.L134:
+.L136:
 	.word	COINTHISONEBitmap
 	.word	drawImage4
 	.size	drawCoins, .-drawCoins

@@ -129,10 +129,13 @@ start:
 	mov	lr, pc
 	bx	r2
 	ldr	r3, .L17+8
+	mov	lr, pc
+	bx	r3
+	ldr	r3, .L17+12
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L10
-	ldr	r3, .L17+12
+	ldr	r3, .L17+16
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L16
@@ -141,12 +144,12 @@ start:
 	bx	lr
 .L16:
 	ldr	r0, [r4]
-	ldr	r3, .L17+16
+	ldr	r3, .L17+20
 	mov	lr, pc
 	bx	r3
 	mov	r1, #1
-	ldr	r2, .L17+20
-	ldr	r3, .L17+24
+	ldr	r2, .L17+24
+	ldr	r3, .L17+28
 	str	r1, [r2]
 	mov	lr, pc
 	bx	r3
@@ -157,6 +160,7 @@ start:
 .L17:
 	.word	rSeed
 	.word	waitForVBlank
+	.word	flipPage
 	.word	oldButtons
 	.word	buttons
 	.word	srand

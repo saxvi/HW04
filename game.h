@@ -24,7 +24,6 @@ typedef struct {
     int width;
     int height;
     unsigned short color;
-    unsigned short stripes;
     int powerup;
 } PLAYER;
 

@@ -140,6 +140,7 @@ void start() {
 
     rSeed++;
     waitForVBlank();
+    flipPage();
 
     if (BUTTON_PRESSED(BUTTON_START)) {
         srand(rSeed);

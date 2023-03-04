@@ -29,7 +29,6 @@ typedef struct {
     int width;
     int height;
     unsigned short color;
-    unsigned short stripes;
     int powerup;
 } PLAYER;
 
@@ -50,7 +49,7 @@ void drawGame();
 void drawPlayer();
 void drawEnemy(ENEMY* e);
 void drawCoins(ENEMY* c);
-# 56 "game.h"
+# 55 "game.h"
 extern PLAYER player;
 extern ENEMY enemies[10];
 extern int lives;
@@ -1596,6 +1595,7 @@ void start() {
 
     rSeed++;
     waitForVBlank();
+    flipPage();
 
     if ((!(~(oldButtons) & ((1<<3))) && (~(buttons) & ((1<<3))))) {
         srand(rSeed);
@@ -1686,7 +1686,7 @@ void lose() {
     }
     waitForVBlank();
 }
-# 260 "main.c"
+# 261 "main.c"
 void goToScoreboard() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
     drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);

@@ -107,7 +107,7 @@ void drawRect4(int x, int y, int width, int height, volatile unsigned char color
 
 void fillScreen4(volatile unsigned char colorIndex) {
     volatile unsigned short pixelData = colorIndex | (colorIndex << 8);
-    DMANow(3, &pixelData, videoBuffer, (2 << 23) | (240 * 160) / 2);
+    DMANow(3, &pixelData, videoBuffer, (2 << 23) | (240 * 160));
 }
 
 

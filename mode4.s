@@ -217,7 +217,7 @@ fillScreen4:
 	.align	2
 .L31:
 	.word	videoBuffer
-	.word	16796416
+	.word	16815616
 	.word	DMANow
 	.size	fillScreen4, .-fillScreen4
 	.align	2

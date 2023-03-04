@@ -29,7 +29,6 @@ typedef struct {
     int width;
     int height;
     unsigned short color;
-    unsigned short stripes;
     int powerup;
 } PLAYER;
 
@@ -50,7 +49,7 @@ void drawGame();
 void drawPlayer();
 void drawEnemy(ENEMY* e);
 void drawCoins(ENEMY* c);
-# 56 "game.h"
+# 55 "game.h"
 extern PLAYER player;
 extern ENEMY enemies[10];
 extern int lives;
@@ -1490,6 +1489,7 @@ void initPlayer() {
     player.yvel = 0;
     player.height = 12;
     player.width = 32;
+    player.powerup = 0;
 }
 
 void initEnemies() {
@@ -1535,13 +1535,17 @@ void updatePlayer() {
     if ((~(buttons) & ((1<<5))) && (player.x - 1 > 0)) {
         player.xvel = -8;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.xvel = -16;
+            player.xvel = -30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else if ((~(buttons) & ((1<<4))) && player.x + player.width < 240) {
         player.xvel = 8;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.xvel = 16;
+            player.xvel = 30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else {
         player.xvel = 0;
     }
@@ -1549,13 +1553,17 @@ void updatePlayer() {
     if ((~(buttons) & ((1<<6))) && (player.y - 1 > 0)) {
         player.yvel = -8;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.yvel = -16;
+            player.yvel = -30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else if ((~(buttons) & ((1<<7))) && (player.y + player.height < 160)) {
         player.yvel = 8;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.yvel = 16;
+            player.yvel = 30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else {
         player.yvel = 0;
     }
@@ -1585,7 +1593,7 @@ void updateEnemy(ENEMY* e) {
                 e->yvel = -2;
             }
 
-            if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
+            if ((!player.powerup) && (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height))) {
                 lives -= 1;
                 e->active = 0;
             }

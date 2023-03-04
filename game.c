@@ -55,6 +55,7 @@ void initPlayer() {
     player.yvel = 0;
     player.height = 12;
     player.width = 32;
+    player.powerup = 0;
 }
 
 void initEnemies() {
@@ -100,13 +101,17 @@ void updatePlayer() {
     if (BUTTON_HELD(BUTTON_LEFT) && (player.x - 1 > 0)) {
         player.xvel = -8;
         if (BUTTON_PRESSED(BUTTON_LSHOULDER)) {
-            player.xvel = -16;
+            player.xvel = -30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else if (BUTTON_HELD(BUTTON_RIGHT) && player.x + player.width < SCREENWIDTH) {
         player.xvel = 8;
         if (BUTTON_PRESSED(BUTTON_RSHOULDER)) {
-            player.xvel = 16;
+            player.xvel = 30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else {
         player.xvel = 0;
     }
@@ -114,13 +119,17 @@ void updatePlayer() {
     if (BUTTON_HELD(BUTTON_UP) && (player.y - 1 > 0)) {
         player.yvel = -8;
         if (BUTTON_PRESSED(BUTTON_LSHOULDER)) {
-            player.yvel = -16;
+            player.yvel = -30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else if (BUTTON_HELD(BUTTON_DOWN) && (player.y + player.height < SCREENHEIGHT)) {
         player.yvel = 8;
         if (BUTTON_PRESSED(BUTTON_RSHOULDER)) {
-            player.yvel = 16;
+            player.yvel = 30;
+            player.powerup = 1;
         }
+        player.powerup = 0;
     } else {
         player.yvel = 0;
     }
@@ -150,7 +159,7 @@ void updateEnemy(ENEMY* e) {
                 e->yvel = -2;
             }
 
-            if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
+            if ((!player.powerup) && (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height))) {
                 lives -= 1;
                 e->active = 0;
             }
