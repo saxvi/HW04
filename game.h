@@ -51,7 +51,6 @@ void drawCoins(ENEMY* c);
 
 #define numEnemies 10
 #define numCoins 10
-#define numLives 3
 
 // variables
 extern PLAYER player;

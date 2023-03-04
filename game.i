@@ -50,7 +50,7 @@ void drawGame();
 void drawPlayer();
 void drawEnemy(ENEMY* e);
 void drawCoins(ENEMY* c);
-# 57 "game.h"
+# 56 "game.h"
 extern PLAYER player;
 extern ENEMY enemies[10];
 extern int lives;
@@ -193,30 +193,33 @@ void drawFullscreenImage4(const unsigned short *image);
 void drawChar4(int x, int y, char ch, unsigned char colorIndex);
 void drawString4(int x, int y, char *str, unsigned char colorIndex);
 # 5 "game.c" 2
-# 1 "spaceship.h" 1
-# 21 "spaceship.h"
-extern const unsigned short spaceshipBitmap[192];
+# 1 "SPACESHIPUSETHISONE!!!!!!.h" 1
+# 21 "SPACESHIPUSETHISONE!!!!!!.h"
+extern const unsigned short SPACESHIPUSETHISONE______Bitmap[192];
 
 
-extern const unsigned short spaceshipPal[256];
+extern const unsigned short SPACESHIPUSETHISONE______Pal[256];
 # 6 "game.c" 2
-# 1 "asteroid.h" 1
-# 21 "asteroid.h"
-extern const unsigned short asteroidBitmap[336];
+# 1 "ASTEROIDUSETHISONE.h" 1
+# 21 "ASTEROIDUSETHISONE.h"
+extern const unsigned short ASTEROIDUSETHISONEBitmap[336];
 
 
-extern const unsigned short asteroidPal[256];
+extern const unsigned short ASTEROIDUSETHISONEPal[256];
 # 7 "game.c" 2
-# 1 "background.h" 1
-# 21 "background.h"
-extern const unsigned short backgroundBitmap[19200];
+# 1 "BACKGROUDN!!!!!!!!!!.h" 1
+# 21 "BACKGROUDN!!!!!!!!!!.h"
+extern const unsigned short BACKGROUDN__________Bitmap[19200];
 
 
-extern const unsigned short backgroundPal[256];
+extern const unsigned short BACKGROUDN__________Pal[256];
 # 8 "game.c" 2
-# 1 "USETHISCOIN.h" 1
-# 20 "USETHISCOIN.h"
-extern const unsigned short USETHISCOINBitmap[288];
+# 1 "COINTHISONE.h" 1
+# 21 "COINTHISONE.h"
+extern const unsigned short COINTHISONEBitmap[288];
+
+
+extern const unsigned short COINTHISONEPal[256];
 # 9 "game.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 1 3
 # 10 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
@@ -1467,14 +1470,14 @@ void initGame() {
     initCoin();
 
 
-    unsigned short colors[7] = {(((0) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10), (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((0) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10), (((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10), (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10)};
-
-    DMANow(3, asteroidPal, ((unsigned short *)0x5000000), 256);
 
 
-    for (int i = 0; i < 7; i++) {
-        ((unsigned short *)0x5000000)[256 - 7 + i] = colors[i];
-    }
+    DMANow(3, ASTEROIDUSETHISONEPal, ((unsigned short *)0x5000000), 256);
+
+
+
+
+
 }
 
 
@@ -1493,20 +1496,18 @@ void initEnemies() {
     for (int i = 0; i < 10; i++) {
         enemies[i].x = (240 / ((rand() % 11) + 1));
         enemies[i].y = (160 / ((rand() % 11) + 1));
-        enemies[i].xvel = (i * (rand() % 5) + 1);
-        enemies[i].yvel = (i * (rand() % 5) + 1);
+        enemies[i].xvel = (i * (rand() % 3) + 1);
+        enemies[i].yvel = (i * (rand() % 2) + 1);
         enemies[i].height = 28;
         enemies[i].width = 24;
-        if (i % 3 == 0) {
-            enemies[i].active = 1;
-        }
+        enemies[i].active = 1;
     }
 }
 
 void initCoin() {
     for (int i = 0; i < 10; i++) {
-        coins[i].x = (240 / ((rand() % 20) + 1));
-        coins[i].y = (160 / ((rand() % 15) + 1));
+        coins[i].x = (10 * ((rand() % 25) + 1));
+        coins[i].y = (10 * ((rand() % 17) + 1));
         coins[i].xvel = 0;
         coins[i].yvel = 0;
         coins[i].height = 24;
@@ -1532,28 +1533,28 @@ void updatePlayer() {
 
 
     if ((~(buttons) & ((1<<5))) && (player.x - 1 > 0)) {
-        player.xvel = -4;
+        player.xvel = -8;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.xvel = -10;
+            player.xvel = -16;
         }
     } else if ((~(buttons) & ((1<<4))) && player.x + player.width < 240) {
-        player.xvel = 4;
+        player.xvel = 8;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.xvel = 10;
+            player.xvel = 16;
         }
     } else {
         player.xvel = 0;
     }
 
     if ((~(buttons) & ((1<<6))) && (player.y - 1 > 0)) {
-        player.yvel = -4;
+        player.yvel = -8;
         if ((!(~(oldButtons) & ((1<<9))) && (~(buttons) & ((1<<9))))) {
-            player.yvel = -10;
+            player.yvel = -16;
         }
     } else if ((~(buttons) & ((1<<7))) && (player.y + player.height < 160)) {
-        player.yvel = 4;
+        player.yvel = 8;
         if ((!(~(oldButtons) & ((1<<8))) && (~(buttons) & ((1<<8))))) {
-            player.yvel = 10;
+            player.yvel = 16;
         }
     } else {
         player.yvel = 0;
@@ -1566,30 +1567,34 @@ void updatePlayer() {
 }
 
 void updateEnemy(ENEMY* e) {
-    if (e->active) {
-        if (e->x <= 1) {
-            e->xvel = 2;
-        }
-        if (e->y <= 1) {
-            e->yvel = 2;
-        }
-        if ((e->x + e->width) >= 239) {
-            e->xvel = -2;
-        }
-        if ((e->y + e->height) >= 159) {
-            e->yvel = -2;
-        }
 
-        if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
-            lives--;
-            e->active = 0;
-        }
-
-        e->oldx = e->x;
-        e->oldy = e->y;
-        e->x += e->xvel;
-        e->y += e->yvel;
+    if (t % 422 == 0) {
+        e->active = 1;
     }
+        if (e->active) {
+            if (e->x <= 1) {
+                e->xvel = 2;
+            }
+            if (e->y <= 1) {
+                e->yvel = 2;
+            }
+            if ((e->x + e->width) >= 239) {
+                e->xvel = -2;
+            }
+            if ((e->y + e->height) >= 159) {
+                e->yvel = -2;
+            }
+
+            if (collision(e->x, e->y, e->width, e->height, player.x, player.y, player.width, player.height)) {
+                lives -= 1;
+                e->active = 0;
+            }
+
+            e->oldx = e->x;
+            e->oldy = e->y;
+            e->x += e->xvel;
+            e->y += e->yvel;
+        }
 }
 
 void updateCoins(ENEMY* c) {
@@ -1606,7 +1611,7 @@ void updateCoins(ENEMY* c) {
             c->active = 0;
             score++;
             *(volatile u16*)0x04000068 = (((5) & 15) << 12) |
-                                (((3) & 7) << 8);
+                          (((3) & 7) << 8);
             *(volatile u16*)0x0400006C = NOTE_G5 | (1<<15);
         }
     }
@@ -1617,7 +1622,7 @@ void updateCoins(ENEMY* c) {
 void drawGame() {
 
 
-    drawFullscreenImage4(backgroundBitmap);
+    drawFullscreenImage4(BACKGROUDN__________Bitmap);
     drawPlayer();
 
     for (int i = 0; i < 10; i++) {
@@ -1632,17 +1637,18 @@ void drawGame() {
 }
 
 void drawPlayer() {
-    drawImage4(player.x, player.y, player.width, player.height, spaceshipBitmap);
+    DMANow(3, ASTEROIDUSETHISONEPal, ((unsigned short *)0x5000000), 256);
+    drawImage4(player.x, player.y, player.width, player.height, SPACESHIPUSETHISONE______Bitmap);
 }
 
 void drawEnemy(ENEMY* e) {
     if (e->active) {
-        drawImage4(e->x, e->y, e->width, e->height, asteroidBitmap);
+        drawImage4(e->x, e->y, e->width, e->height, ASTEROIDUSETHISONEBitmap);
     }
 }
 
 void drawCoins(ENEMY* c) {
     if (c->active) {
-        drawImage4(c->x, c->y, c->width, c->height, USETHISCOINBitmap);
+        drawImage4(c->x, c->y, c->width, c->height, COINTHISONEBitmap);
     }
 }

@@ -3,9 +3,10 @@
 #include "mode4.h"
 #include "print.h"
 #include "sound.h"
-#include "spaceship.h"
-#include "asteroid.h"
-#include "background.h"
+#include "SPACESHIPUSETHISONE!!!!!!.h"
+#include "ASTEROIDUSETHISONE.h"
+#include "BACKGROUDN!!!!!!!!!!.h"
+#include "COINTHISONE.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -18,7 +19,7 @@ int skipFrames = 2;
 
 int score;
 int highscore;
-extern int lives = 3;
+extern int lives = 5;
 
 
 // states
@@ -48,6 +49,7 @@ char temp;
 
 // prototypes
 void initialize();
+
 
 // state prototypes
 void goToStart();
@@ -115,13 +117,16 @@ void initialize() {
     buttons = REG_BUTTONS;
     oldButtons = 0;
 
+    DMANow(3, ASTEROIDUSETHISONEPal, PALETTE, 256);
+
     goToStart();
 }
 
 void goToStart() {
 
-    drawFullscreenImage4(backgroundBitmap);
-    drawString4(90, 38, "space guys", ORANGE);
+    fillScreen4(PALETTE[15]);
+    //drawFullscreenImage4(backgroundBitmap);
+    drawString4(90, 38, "space guys", PALETTE[18]);
 
     waitForVBlank();
     flipPage();
@@ -206,7 +211,7 @@ void pause() {
 // set up lose
 void goToLose() {
     fillScreen4(GRAY);
-    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
     drawString4(85, 48, "you lost!", YELLOW);
     drawString4(85, 68, "score: ", RED);
     drawString4(125, 68, hscore, RED);
@@ -255,7 +260,7 @@ void lose() {
 // go to da scoreboard
 void goToScoreboard() {
     fillScreen4(GRAY);
-    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
     drawString4(85, 48, "this is where", YELLOW);
     drawString4(85, 68, "i will put score ", RED);
     drawString4(125, 68, hscore, RED);

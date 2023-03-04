@@ -50,7 +50,7 @@ void drawGame();
 void drawPlayer();
 void drawEnemy(ENEMY* e);
 void drawCoins(ENEMY* c);
-# 57 "game.h"
+# 56 "game.h"
 extern PLAYER player;
 extern ENEMY enemies[10];
 extern int lives;
@@ -400,27 +400,34 @@ enum {
   NOTE_C8 =2017
 } NOTES;
 # 6 "main.c" 2
-# 1 "spaceship.h" 1
-# 21 "spaceship.h"
-extern const unsigned short spaceshipBitmap[192];
+# 1 "SPACESHIPUSETHISONE!!!!!!.h" 1
+# 21 "SPACESHIPUSETHISONE!!!!!!.h"
+extern const unsigned short SPACESHIPUSETHISONE______Bitmap[192];
 
 
-extern const unsigned short spaceshipPal[256];
+extern const unsigned short SPACESHIPUSETHISONE______Pal[256];
 # 7 "main.c" 2
-# 1 "asteroid.h" 1
-# 21 "asteroid.h"
-extern const unsigned short asteroidBitmap[336];
+# 1 "ASTEROIDUSETHISONE.h" 1
+# 21 "ASTEROIDUSETHISONE.h"
+extern const unsigned short ASTEROIDUSETHISONEBitmap[336];
 
 
-extern const unsigned short asteroidPal[256];
+extern const unsigned short ASTEROIDUSETHISONEPal[256];
 # 8 "main.c" 2
-# 1 "background.h" 1
-# 21 "background.h"
-extern const unsigned short backgroundBitmap[19200];
+# 1 "BACKGROUDN!!!!!!!!!!.h" 1
+# 21 "BACKGROUDN!!!!!!!!!!.h"
+extern const unsigned short BACKGROUDN__________Bitmap[19200];
 
 
-extern const unsigned short backgroundPal[256];
+extern const unsigned short BACKGROUDN__________Pal[256];
 # 9 "main.c" 2
+# 1 "COINTHISONE.h" 1
+# 21 "COINTHISONE.h"
+extern const unsigned short COINTHISONEBitmap[288];
+
+
+extern const unsigned short COINTHISONEPal[256];
+# 10 "main.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 1 3
 # 10 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/machine/ieeefp.h" 1 3
@@ -1044,7 +1051,7 @@ extern long double _strtold_r (struct _reent *, const char *restrict, char **res
 extern long double strtold (const char *restrict, char **restrict);
 # 336 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
 
-# 10 "main.c" 2
+# 11 "main.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 1 3
 # 36 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 3
 # 1 "/opt/devkitpro/devkitARM/lib/gcc/arm-none-eabi/9.1.0/include/stddef.h" 1 3 4
@@ -1455,11 +1462,11 @@ _putchar_unlocked(int _c)
 }
 # 797 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdio.h" 3
 
-# 11 "main.c" 2
+# 12 "main.c" 2
 
 
 
-# 13 "main.c"
+# 14 "main.c"
 unsigned short oldButtons;
 unsigned short buttons;
 
@@ -1468,7 +1475,7 @@ int skipFrames = 2;
 
 int score;
 int highscore;
-extern int lives = 3;
+extern int lives = 5;
 
 
 
@@ -1498,6 +1505,7 @@ char temp;
 
 
 void initialize();
+
 
 
 void goToStart();
@@ -1565,13 +1573,16 @@ void initialize() {
     buttons = (*(volatile unsigned short *)0x04000130);
     oldButtons = 0;
 
+    DMANow(3, ASTEROIDUSETHISONEPal, ((unsigned short *)0x5000000), 256);
+
     goToStart();
 }
 
 void goToStart() {
 
-    drawFullscreenImage4(backgroundBitmap);
-    drawString4(90, 38, "space guys", (((31) & 31) | ((25) & 31) << 5 | ((0) & 31) << 10));
+    fillScreen4(((unsigned short *)0x5000000)[15]);
+
+    drawString4(90, 38, "space guys", ((unsigned short *)0x5000000)[18]);
 
     waitForVBlank();
     flipPage();
@@ -1656,7 +1667,7 @@ void pause() {
 
 void goToLose() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
-    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
     drawString4(85, 48, "you lost!", (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
     drawString4(85, 68, "score: ", (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
     drawString4(125, 68, hscore, (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
@@ -1676,10 +1687,10 @@ void lose() {
     }
     waitForVBlank();
 }
-# 256 "main.c"
+# 261 "main.c"
 void goToScoreboard() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
-    drawImage4(83, 90, 28, 24, spaceshipBitmap);
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
     drawString4(85, 48, "this is where", (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
     drawString4(85, 68, "i will put score ", (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
     drawString4(125, 68, hscore, (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));

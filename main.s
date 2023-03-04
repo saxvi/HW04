@@ -27,26 +27,27 @@ goToStart:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	ldr	r0, .L4
-	ldr	r3, .L4+4
+	mov	r4, #83886080
+	ldr	r3, .L4
+	ldrb	r0, [r4, #30]	@ zero_extendqisi2
 	mov	lr, pc
 	bx	r3
-	ldr	r4, .L4+8
 	mov	r1, #38
-	ldr	r2, .L4+12
+	ldr	r2, .L4+4
 	mov	r0, #90
-	mov	r3, #63
+	ldrb	r3, [r4, #36]	@ zero_extendqisi2
+	ldr	r4, .L4+8
 	mov	lr, pc
 	bx	r4
+	ldr	r3, .L4+12
+	mov	lr, pc
+	bx	r3
 	ldr	r3, .L4+16
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L4+20
-	mov	lr, pc
-	bx	r3
 	mov	r3, #0
-	ldr	r1, .L4+24
-	ldr	r2, .L4+28
+	ldr	r1, .L4+20
+	ldr	r2, .L4+24
 	str	r3, [r1]
 	str	r3, [r2]
 	pop	{r4, lr}
@@ -54,10 +55,9 @@ goToStart:
 .L5:
 	.align	2
 .L4:
-	.word	backgroundBitmap
-	.word	drawFullscreenImage4
-	.word	drawString4
+	.word	fillScreen4
 	.word	.LC0
+	.word	drawString4
 	.word	waitForVBlank
 	.word	flipPage
 	.word	state
@@ -74,23 +74,30 @@ initialize:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r3, #67108864
-	mov	r0, #128
+	mov	r2, #128
+	mvn	r0, #170
 	mov	r1, #2
-	mvn	ip, #170
-	mov	r2, #0
-	str	lr, [sp, #-4]!
-	ldr	lr, .L8
-	strh	lr, [r3]	@ movhi
-	strh	r0, [r3, #132]	@ movhi
-	strh	ip, [r3, #128]	@ movhi
-	ldr	r0, .L8+4
+	push	{r4, lr}
+	mov	lr, #0
+	ldr	ip, .L8
+	strh	ip, [r3]	@ movhi
+	strh	r2, [r3, #132]	@ movhi
+	strh	r0, [r3, #128]	@ movhi
+	ldr	r2, .L8+4
 	strh	r1, [r3, #130]	@ movhi
 	ldr	r1, .L8+8
-	ldrh	r0, [r0, #48]
-	ldr	r3, .L8+12
-	ldr	lr, [sp], #4
+	ldrh	r0, [r2, #48]
+	ldr	ip, .L8+12
 	strh	r0, [r1]	@ movhi
-	strh	r2, [r3]	@ movhi
+	ldr	r4, .L8+16
+	mov	r3, #256
+	mov	r2, #83886080
+	mov	r0, #3
+	ldr	r1, .L8+20
+	strh	lr, [ip]	@ movhi
+	mov	lr, pc
+	bx	r4
+	pop	{r4, lr}
 	b	goToStart
 .L9:
 	.align	2
@@ -99,6 +106,8 @@ initialize:
 	.word	67109120
 	.word	buttons
 	.word	oldButtons
+	.word	DMANow
+	.word	ASTEROIDUSETHISONEPal
 	.size	initialize, .-initialize
 	.align	2
 	.global	start
@@ -421,7 +430,7 @@ goToLose:
 	.align	2
 .L37:
 	.word	fillScreen4
-	.word	spaceshipBitmap
+	.word	SPACESHIPUSETHISONE______Bitmap
 	.word	drawImage4
 	.word	drawString4
 	.word	.LC7
@@ -542,7 +551,7 @@ goToScoreboard:
 	.align	2
 .L50:
 	.word	fillScreen4
-	.word	spaceshipBitmap
+	.word	SPACESHIPUSETHISONE______Bitmap
 	.word	drawImage4
 	.word	drawString4
 	.word	.LC9
@@ -659,39 +668,26 @@ main:
 	@ Volatile: function does not return.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	push	{r4, r7, fp, lr}
 	mov	r3, #67108864
-	mvn	ip, #170
-	mov	lr, #128
-	mov	r1, #2
-	mov	r0, #0
-	ldr	r6, .L94
-	ldr	r4, .L94+4
-	strh	r6, [r3]	@ movhi
-	ldr	r2, .L94+8
-	strh	r4, [r3]	@ movhi
-	strh	lr, [r3, #132]	@ movhi
-	strh	ip, [r3, #128]	@ movhi
-	strh	r1, [r3, #130]	@ movhi
-	ldr	r8, .L94+12
-	mov	r5, r2
-	ldr	r4, .L94+16
-	ldrh	r2, [r2, #48]
-	ldr	r6, .L94+20
-	ldr	r3, .L94+24
-	strh	r2, [r8]	@ movhi
-	strh	r0, [r4]	@ movhi
-	ldr	fp, .L94+28
+	ldr	r2, .L94
+	ldr	r8, .L94+4
+	ldr	r6, .L94+8
+	push	{r4, r7, fp, lr}
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L94+12
 	mov	lr, pc
 	bx	r3
-	ldr	r10, .L94+32
+	ldr	r5, .L94+16
 	ldrh	r3, [r8]
 	ldr	ip, [r6]
-	ldr	r9, .L94+36
-	ldr	r7, .L94+40
+	ldr	fp, .L94+20
+	ldr	r10, .L94+24
+	ldr	r9, .L94+28
+	ldr	r7, .L94+32
+	ldr	r4, .L94+36
 .L92:
-	strh	r3, [r4]	@ movhi
-	ldrh	r3, [r5, #48]
+	strh	r3, [r5]	@ movhi
+	ldrh	r3, [r4, #48]
 	strh	r3, [r8]	@ movhi
 	cmp	ip, #5
 	ldrls	pc, [pc, ip, asl #2]
@@ -704,7 +700,7 @@ main:
 	.word	.L88
 	.word	.L86
 .L86:
-	ldr	r3, .L94+44
+	ldr	r3, .L94+40
 	mov	lr, pc
 	bx	r3
 	ldrh	r3, [r8]
@@ -715,7 +711,7 @@ main:
 	str	r0, [r7]
 	b	.L92
 .L88:
-	ldr	r3, .L94+48
+	ldr	r3, .L94+44
 	mov	lr, pc
 	bx	r3
 	ldrh	r3, [r8]
@@ -743,16 +739,15 @@ main:
 	.align	2
 .L94:
 	.word	1044
-	.word	1027
-	.word	67109120
 	.word	buttons
-	.word	oldButtons
 	.word	state
-	.word	goToStart
+	.word	initialize
+	.word	oldButtons
 	.word	start
 	.word	game
 	.word	pause
 	.word	.LANCHOR1
+	.word	67109120
 	.word	scoreboard
 	.word	lose
 	.size	main, .-main
@@ -776,7 +771,7 @@ main:
 	.type	lives, %object
 	.size	lives, 4
 lives:
-	.word	3
+	.word	5
 	.type	skipFrames, %object
 	.size	skipFrames, 4
 skipFrames:
