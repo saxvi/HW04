@@ -46,6 +46,7 @@ char temp2[1];
 char buffer[41];
 char hscore[41];
 char temp;
+char leaderboard[3];
 
 // prototypes
 void initialize();
@@ -128,7 +129,6 @@ void goToStart() {
 
 
     waitForVBlank();
-    flipPage();
 
     state = START;
 
@@ -176,9 +176,10 @@ void game() {
         goToPause();
     }
 
-    // if (lives == 0) {
-    //     goToLose();
-    // }
+    if (lives == 0) {
+        temp = score;
+        goToLose();
+    }
 }
 
 // sets up pause state
@@ -210,14 +211,16 @@ void pause() {
 
 // set up lose
 void goToLose() {
-    fillScreen4(GRAY);
-    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
+    drawFullscreenImage4(BACKGROUDN__________Bitmap);
+    drawImage4(96, 120, 28, 24, SPACESHIPUSETHISONE______Bitmap);
     drawString4(85, 48, "you lost!", PALETTE[3]);
     drawString4(85, 68, "score: ", PALETTE[19]);
     drawString4(125, 68, hscore, PALETTE[19]);
 
     drawString4(45, 88, "press start to try again", PALETTE[18]);
 
+    leaderboard[0] = hscore;
+    
     waitForVBlank();
     flipPage();
 
@@ -259,13 +262,31 @@ void lose() {
 
 // go to da scoreboard
 void goToScoreboard() {
-    fillScreen4(GRAY);
-    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "this is where", PALETTE[3]);
-    drawString4(85, 68, "i will put score ", PALETTE[19]);
-    drawString4(125, 68, hscore, PALETTE[19]);
+    fillScreen4(PALETTE[3]);
 
-    drawString4(45, 88, "press start to try again", PALETTE[19]);
+    if (leaderboard[0] == NULL) {
+        leaderboard[0] = score;
+    } else if (leaderboard[0] < score) {
+        temp = leaderboard[0];
+        leaderboard[0] = score;
+        leaderboard[1] = temp;
+    } else if (leaderboard[0] > score && (leaderboard[1] < score || leaderboard[1] == NULL)) {
+        temp = leaderboard[1];
+        leaderboard[1] = score;
+        leaderboard[2] = temp;
+    }
+    
+    // scoreboard
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
+    drawString4(85, 48, "scoreboard", PALETTE[3]);
+    drawString4(85, 68, "1. ", PALETTE[19]);
+    drawString4(125, 68, leaderboard[0], PALETTE[19]);
+    drawString4(85, 80, "2. ", PALETTE[19]);
+    drawString4(125, 80, leaderboard[1], PALETTE[19]);
+    drawString4(85, 92, "3. ", PALETTE[19]);
+    drawString4(125, 92, leaderboard[2], PALETTE[19]);
+
+    drawString4(45, 148, "press start to try again", PALETTE[19]);
 
     waitForVBlank();
     flipPage();

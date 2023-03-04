@@ -1501,6 +1501,7 @@ char temp2[1];
 char buffer[41];
 char hscore[41];
 char temp;
+char leaderboard[3];
 
 
 void initialize();
@@ -1583,7 +1584,6 @@ void goToStart() {
 
 
     waitForVBlank();
-    flipPage();
 
     state = START;
 
@@ -1631,9 +1631,10 @@ void game() {
         goToPause();
     }
 
-
-
-
+    if (lives == 0) {
+        temp = score;
+        goToLose();
+    }
 }
 
 
@@ -1686,15 +1687,41 @@ void lose() {
     }
     waitForVBlank();
 }
-# 261 "main.c"
+# 262 "main.c"
 void goToScoreboard() {
-    fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
-    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "this is where", ((unsigned short *)0x5000000)[3]);
-    drawString4(85, 68, "i will put score ", ((unsigned short *)0x5000000)[19]);
-    drawString4(125, 68, hscore, ((unsigned short *)0x5000000)[19]);
+    fillScreen4(((unsigned short *)0x5000000)[3]);
 
-    drawString4(45, 88, "press start to try again", ((unsigned short *)0x5000000)[19]);
+    if (leaderboard[0] == 
+# 265 "main.c" 3 4
+                         ((void *)0)
+# 265 "main.c"
+                             ) {
+        leaderboard[0] = score;
+    } else if (leaderboard[0] < score) {
+        temp = leaderboard[0];
+        leaderboard[0] = score;
+        leaderboard[1] = temp;
+    } else if (leaderboard[0] > score && (leaderboard[1] < score || leaderboard[1] == 
+# 271 "main.c" 3 4
+                                                                                     ((void *)0)
+# 271 "main.c"
+                                                                                         )) {
+        temp = leaderboard[1];
+        leaderboard[1] = score;
+        leaderboard[2] = temp;
+    }
+
+
+    drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
+    drawString4(85, 48, "scoreboard", ((unsigned short *)0x5000000)[3]);
+    drawString4(85, 68, "1. ", ((unsigned short *)0x5000000)[19]);
+    drawString4(125, 68, leaderboard[0], ((unsigned short *)0x5000000)[19]);
+    drawString4(85, 80, "2. ", ((unsigned short *)0x5000000)[19]);
+    drawString4(125, 80, leaderboard[1], ((unsigned short *)0x5000000)[19]);
+    drawString4(85, 92, "3. ", ((unsigned short *)0x5000000)[19]);
+    drawString4(125, 92, leaderboard[2], ((unsigned short *)0x5000000)[19]);
+
+    drawString4(45, 148, "press start to try again", ((unsigned short *)0x5000000)[19]);
 
     waitForVBlank();
     flipPage();
