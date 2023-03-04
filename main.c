@@ -6,7 +6,7 @@
 #include "SPACESHIPUSETHISONE!!!!!!.h"
 #include "ASTEROIDUSETHISONE.h"
 #include "BACKGROUDN!!!!!!!!!!.h"
-#include "COINTHISONE.h"
+#include "COINPLEASE.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -117,16 +117,15 @@ void initialize() {
     buttons = REG_BUTTONS;
     oldButtons = 0;
 
-    DMANow(3, ASTEROIDUSETHISONEPal, PALETTE, 256);
-
     goToStart();
 }
 
 void goToStart() {
 
-    fillScreen4(PALETTE[15]);
-    //drawFullscreenImage4(backgroundBitmap);
-    drawString4(90, 38, "space guys", PALETTE[18]);
+    DMANow(3, COINPLEASEPal, PALETTE, 256);
+    drawFullscreenImage4(BACKGROUDN__________Bitmap);
+    drawString4(90, 38, "space guys", PALETTE[3]);
+
 
     waitForVBlank();
     flipPage();
@@ -161,12 +160,12 @@ void game() {
     updateGame();
     drawGame();
 
-    drawString4(2, 2, "lives: ", REDID);
-    drawString4(2, 10, "score: ", REDID);
+    drawString4(2, 2, "lives: ", PALETTE[3]);
+    drawString4(2, 10, "score: ", PALETTE[3]);
     sprintf(buffer, "%d", lives);
     sprintf(hscore, "%d", score);
-    drawString4(42, 2, buffer, REDID);
-    drawString4(42, 10, hscore, REDID);
+    drawString4(42, 2, buffer, PALETTE[3]);
+    drawString4(42, 10, hscore, PALETTE[3]);
 
     waitForVBlank();
     flipPage();
@@ -185,9 +184,9 @@ void game() {
 void goToPause() {
 
     fillScreen4(GRAY);
-    drawString4(90, 38, "game paused!", YELLOW);
-    drawString4(60, 58, "press start to continue", BLUE);
-    drawString4(70, 68, "press select to quit", GREEN);
+    drawString4(90, 38, "game paused!", PALETTE[3]);
+    drawString4(60, 58, "press start to continue", PALETTE[19]);
+    drawString4(70, 68, "press select to quit", PALETTE[18]);
 
     waitForVBlank();
     flipPage();
@@ -212,11 +211,11 @@ void pause() {
 void goToLose() {
     fillScreen4(GRAY);
     drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "you lost!", YELLOW);
-    drawString4(85, 68, "score: ", RED);
-    drawString4(125, 68, hscore, RED);
+    drawString4(85, 48, "you lost!", PALETTE[3]);
+    drawString4(85, 68, "score: ", PALETTE[19]);
+    drawString4(125, 68, hscore, PALETTE[19]);
 
-    drawString4(45, 88, "press start to try again", BLUE);
+    drawString4(45, 88, "press start to try again", PALETTE[18]);
 
     waitForVBlank();
     flipPage();
@@ -261,11 +260,11 @@ void lose() {
 void goToScoreboard() {
     fillScreen4(GRAY);
     drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "this is where", YELLOW);
-    drawString4(85, 68, "i will put score ", RED);
-    drawString4(125, 68, hscore, RED);
+    drawString4(85, 48, "this is where", PALETTE[3]);
+    drawString4(85, 68, "i will put score ", PALETTE[19]);
+    drawString4(125, 68, hscore, PALETTE[19]);
 
-    drawString4(45, 88, "press start to try again", BLUE);
+    drawString4(45, 88, "press start to try again", PALETTE[19]);
 
     waitForVBlank();
     flipPage();

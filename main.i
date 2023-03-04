@@ -421,12 +421,12 @@ extern const unsigned short BACKGROUDN__________Bitmap[19200];
 
 extern const unsigned short BACKGROUDN__________Pal[256];
 # 9 "main.c" 2
-# 1 "COINTHISONE.h" 1
-# 21 "COINTHISONE.h"
-extern const unsigned short COINTHISONEBitmap[288];
+# 1 "COINPLEASE.h" 1
+# 21 "COINPLEASE.h"
+extern const unsigned short COINPLEASEBitmap[288];
 
 
-extern const unsigned short COINTHISONEPal[256];
+extern const unsigned short COINPLEASEPal[256];
 # 10 "main.c" 2
 # 1 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 1 3
 # 10 "/opt/devkitpro/devkitARM/arm-none-eabi/include/stdlib.h" 3
@@ -1573,16 +1573,15 @@ void initialize() {
     buttons = (*(volatile unsigned short *)0x04000130);
     oldButtons = 0;
 
-    DMANow(3, ASTEROIDUSETHISONEPal, ((unsigned short *)0x5000000), 256);
-
     goToStart();
 }
 
 void goToStart() {
 
-    fillScreen4(((unsigned short *)0x5000000)[15]);
+    DMANow(3, COINPLEASEPal, ((unsigned short *)0x5000000), 256);
+    drawFullscreenImage4(BACKGROUDN__________Bitmap);
+    drawString4(90, 38, "space guys", ((unsigned short *)0x5000000)[3]);
 
-    drawString4(90, 38, "space guys", ((unsigned short *)0x5000000)[18]);
 
     waitForVBlank();
     flipPage();
@@ -1617,12 +1616,12 @@ void game() {
     updateGame();
     drawGame();
 
-    drawString4(2, 2, "lives: ", REDID);
-    drawString4(2, 10, "score: ", REDID);
+    drawString4(2, 2, "lives: ", ((unsigned short *)0x5000000)[3]);
+    drawString4(2, 10, "score: ", ((unsigned short *)0x5000000)[3]);
     sprintf(buffer, "%d", lives);
     sprintf(hscore, "%d", score);
-    drawString4(42, 2, buffer, REDID);
-    drawString4(42, 10, hscore, REDID);
+    drawString4(42, 2, buffer, ((unsigned short *)0x5000000)[3]);
+    drawString4(42, 10, hscore, ((unsigned short *)0x5000000)[3]);
 
     waitForVBlank();
     flipPage();
@@ -1641,9 +1640,9 @@ void game() {
 void goToPause() {
 
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
-    drawString4(90, 38, "game paused!", (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
-    drawString4(60, 58, "press start to continue", (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10));
-    drawString4(70, 68, "press select to quit", (((0) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
+    drawString4(90, 38, "game paused!", ((unsigned short *)0x5000000)[3]);
+    drawString4(60, 58, "press start to continue", ((unsigned short *)0x5000000)[19]);
+    drawString4(70, 68, "press select to quit", ((unsigned short *)0x5000000)[18]);
 
     waitForVBlank();
     flipPage();
@@ -1668,11 +1667,11 @@ void pause() {
 void goToLose() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
     drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "you lost!", (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
-    drawString4(85, 68, "score: ", (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
-    drawString4(125, 68, hscore, (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
+    drawString4(85, 48, "you lost!", ((unsigned short *)0x5000000)[3]);
+    drawString4(85, 68, "score: ", ((unsigned short *)0x5000000)[19]);
+    drawString4(125, 68, hscore, ((unsigned short *)0x5000000)[19]);
 
-    drawString4(45, 88, "press start to try again", (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10));
+    drawString4(45, 88, "press start to try again", ((unsigned short *)0x5000000)[18]);
 
     waitForVBlank();
     flipPage();
@@ -1687,15 +1686,15 @@ void lose() {
     }
     waitForVBlank();
 }
-# 261 "main.c"
+# 260 "main.c"
 void goToScoreboard() {
     fillScreen4((((15) & 31) | ((15) & 31) << 5 | ((15) & 31) << 10));
     drawImage4(83, 90, 28, 24, SPACESHIPUSETHISONE______Bitmap);
-    drawString4(85, 48, "this is where", (((31) & 31) | ((31) & 31) << 5 | ((0) & 31) << 10));
-    drawString4(85, 68, "i will put score ", (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
-    drawString4(125, 68, hscore, (((31) & 31) | ((0) & 31) << 5 | ((0) & 31) << 10));
+    drawString4(85, 48, "this is where", ((unsigned short *)0x5000000)[3]);
+    drawString4(85, 68, "i will put score ", ((unsigned short *)0x5000000)[19]);
+    drawString4(125, 68, hscore, ((unsigned short *)0x5000000)[19]);
 
-    drawString4(45, 88, "press start to try again", (((0) & 31) | ((0) & 31) << 5 | ((31) & 31) << 10));
+    drawString4(45, 88, "press start to try again", ((unsigned short *)0x5000000)[19]);
 
     waitForVBlank();
     flipPage();
