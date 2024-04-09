@@ -1,5 +1,5 @@
 # space guys #
-### for cs 2261 at gatech ###
+## hw4 for cs 2261 at gatech ##
 
 welcome to space. you are navigating through a strangely aggressive asteroid belt! honestly it's really weird why are they so fast.
 
