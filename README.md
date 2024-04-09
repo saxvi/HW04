@@ -1,6 +1,5 @@
-# space guys #
 ## hw4 for cs 2261 at gatech ##
-
+# space guys #
 welcome to space. you are navigating through a strangely aggressive asteroid belt! honestly it's really weird why are they so fast.
 
 to move around, use the **up, down, left, and right** buttons. you can also dodge (by increasing your movement speed for a single movement) by using **left shoulder while going left and up, and right shouldder while going right and down**.
